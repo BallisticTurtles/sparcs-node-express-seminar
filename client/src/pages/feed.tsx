@@ -4,7 +4,7 @@ import { SAPIBase } from "../tools/api";
 import Header from "../components/header";
 import "./css/feed.css";
 
-interface IAPIResponse  { _id: string, title: string, content: string, itemViewCnt: number }
+interface IAPIResponse  { _id: string, title: string, content: string, itemViewCnt: number, star: binary}
 
 const FeedPage = (props: {}) => {
   const [ LAPIResponse, setLAPIResponse ] = React.useState<IAPIResponse[]>([]);
@@ -47,6 +47,13 @@ const FeedPage = (props: {}) => {
     asyncFun().catch(e => window.alert(`AN ERROR OCCURED! ${e}`))
   }
 
+  const starPost = (id) => {
+    const asyncFun = async () => {
+      await axios.post( SAPIBase + '/feed/starFeed', {id: id} );
+    }
+    asyncFun().catch(e => window.alert(`AN ERROR OCCURED! ${e}`));
+  }
+
   const deletePost = (id: string) => {
     const asyncFun = async () => {
       // One can set X-HTTP-Method header to DELETE to specify deletion as well
@@ -81,6 +88,9 @@ const FeedPage = (props: {}) => {
             <div className={"edit-post"}>
               <input type={"text"} value={SEditPostContent} onChange={(e) => setSEditPostContent(e.target.value)}/>
               <button onClick={(e) => editPost(`${val.id}`, SEditPostContent)}>✎</button>
+            </div>
+            <div className={'star-post'}>
+              <button onClick={(e) => starPost(`${val.id}`)}>☆</button>
             </div>
           </div>
         ) }

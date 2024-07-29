@@ -55,6 +55,17 @@ class FeedDB {
         }
     }
 
+    starItem = async ( id, star ) => {
+        try {
+            const OStarFiler = { _id: id };
+            const res = await FeedModel.updateOne(OStarFiler, star);
+            return true;
+        } catch (e) {
+            console.log(`[Feed-DB] Star Error: ${ e }`);
+            return false;
+        }
+    }
+
     deleteItem = async ( id ) => {
         try {
             const ODeleteFiler = { _id: id };
@@ -97,6 +108,17 @@ router.post('/editFeed', async (req, res) => {
         const { title, content } = req.body
         const editResult = await feedDBInst.editItem(id);
         if(!editResult) return res.status(500).json({ error: dbRes.data })
+        else return res.status(200).json({ isOK: true });
+    } catch (e) {
+        return res.status(500).json({ error: e });
+    }
+});
+
+router.post('/starFeed', async (req, res) => {
+    try {
+        const { title, content } = req.body
+        const starResult = await feedDBInst.starItem(id, star);
+        if(!starResult) return res.status(500).json({ error: dbRes.data })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
         return res.status(500).json({ error: e });
